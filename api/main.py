@@ -1,32 +1,34 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import pickle
-from typing import Dict
+from joblib import load
+import os
 
-# Charger le modèle pré-entraîné
-with open("api/model.pkl", "rb") as f:
-    model = pickle.load(f)
+# Définir la classe pour les données entrantes
+class TextItem(BaseModel):
+    text: str
 
-# Initialiser l'application FastAPI
 app = FastAPI()
 
-# Classe pour représenter la requête
-class Article(BaseModel):
-    title: str
-    content: str
+# Chemin vers le modèle pré-entraîné
+MODEL_PATH = 'model.joblib'
 
-# Endpoint pour prédire si un article est fake ou vrai
-@app.post("/predict")
-async def predict(article: Article):
+# Charger le modèle de Naïve Bayes
+if os.path.exists(MODEL_PATH):
+    model = load(MODEL_PATH)
+else:
+    raise FileNotFoundError(f"Le modèle spécifié à '{MODEL_PATH}' n'a pas été trouvé.")
+
+# Créer un endpoint pour faire des prédictions
+@app.post("/predict/")
+async def predict(item: TextItem):
     try:
-        # Faire une prédiction
-        prediction = model.predict([article.content])
-        confidence = max(model.predict_proba([article.content])[0])
-        return {"prediction": prediction[0], "confidence": f"{confidence * 100:.2f}%"}
+        # Le modèle attend un tableau 2D (ex: [[feature1, feature2]])
+        prediction = model.predict([item.text])
+        return {"prediction": prediction[0]}  # Retourner la première prédiction
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Endpoint de test
+# Route pour vérifier que l'API est en ligne
 @app.get("/")
 async def root():
-    return {"message": "Fake News Detection API is running"}
+    return {"message": "API de détection de Fake News en fonctionnement!"}
