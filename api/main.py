@@ -1,3 +1,4 @@
+import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from joblib import load
@@ -5,7 +6,10 @@ import os
 
 # Définir la classe pour les données entrantes
 class TextItem(BaseModel):
+    title: str
     text: str
+    subject: str
+    date: str
 
 app = FastAPI()
 
@@ -22,9 +26,19 @@ else:
 @app.post("/predict/")
 async def predict(item: TextItem):
     try:
-        # Le modèle attend un tableau 2D (ex: [[feature1, feature2]])
-        prediction = model.predict([item.text])
-        return {"prediction": prediction[0]}  # Retourner la première prédiction
+        # Créer un DataFrame à partir des données entrantes
+        input_data = pd.DataFrame([{
+            'title': item.title,
+            'text': item.text,
+            'subject': item.subject,
+            'date': item.date
+        }])
+
+        # Faire la prédiction
+        prediction = model.predict(input_data)
+
+        # Retourner la première prédiction
+        return {"prediction": prediction[0]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
