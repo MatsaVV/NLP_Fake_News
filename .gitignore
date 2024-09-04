@@ -1,5 +1,11 @@
 /data
 .DS_Store
+
+__pycache__/
+*egg-info/
+.DS_Store
+.env
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
