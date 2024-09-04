@@ -14,7 +14,7 @@ COPY Pipfile.lock /app/Pipfile.lock
 RUN pip install pipenv
 RUN pipenv install --system --deploy --ignore-pipfile
 
-# Expose the port (if needed, replace $PORT with a specific port like 8000 if not set as an environment variable)
+# Expose the port stremlit en plus
 EXPOSE 8000
 
 # Command to run the FastAPI application using Uvicorn
