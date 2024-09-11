@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+httpx = "*"
 fastapi = "*"
 uvicorn = "*"
 joblib = "*"
@@ -15,7 +16,6 @@ numpy = "*"
 scikit-learn = "*"
 pytest = "*"
 requests = "*"
-httpx = "*"
 
 [dev-packages]
 
