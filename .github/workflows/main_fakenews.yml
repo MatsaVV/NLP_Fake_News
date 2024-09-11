@@ -16,6 +16,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Run tests with pytest
+      run: pipenv run pytest -v tests/
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
