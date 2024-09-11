@@ -15,6 +15,7 @@ numpy = "*"
 scikit-learn = "*"
 pytest = "*"
 requests = "*"
+httpx = "*"
 
 [dev-packages]
 
