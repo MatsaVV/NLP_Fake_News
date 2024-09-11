@@ -16,7 +16,9 @@ RUN pip install pipenv
 RUN pipenv install --system --deploy --ignore-pipfile
 
 # Exécuter les tests avant le déploiement
-RUN pipenv run python -m pytest tests/
+RUN pipenv install pytest
+RUN python -m pytest tests/
+
 
 
 # Exposer le port 8000 pour FastAPI
